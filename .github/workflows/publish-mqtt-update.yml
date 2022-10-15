@@ -1,0 +1,19 @@
+name: Publish MQTT Update Message
+on: [push]
+jobs:
+  build:
+      name: Build
+      runs-on: ubuntu-latest
+      steps:
+      - name: Publish reponame, commit-message and actor to mqtt broker
+        uses: juhrlass/mqtt-action@master
+        with:
+          protocol: mqtt
+          host: broker.hivemq.com
+          port: 1883
+          topic: "skunkforce/CI/push/${{ github.repository }}"
+          message: "{
+            'repo' : ${{ github.repository }},
+            'commit' : ${{ github.event.head_commit.message }},
+            'actor' : ${{ github.actor }} 
+          }"
